@@ -71,6 +71,8 @@ if __name__ == '__main__':
             ymax = int(box.find("ymax").text)
             motion_roi_rects.append((xmin,ymin,xmax, ymax))
 
+    start = False
+
     while True:
         ret, frame = cap.read()
         if frame is None:
@@ -121,6 +123,10 @@ if __name__ == '__main__':
         # if the `q` key was pressed, break from the loop
         if key == ord("q"):
             break
+
+        if start == False:
+            cv2.waitKey(0)
+            start = True
 
         if motionThisFrame and args['slow_motion'] == True:
             time.sleep(0.5)

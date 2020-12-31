@@ -10,11 +10,14 @@
 
 	// background subtractor
 	// valid values are [CNT GMG MOG GSOC LSBP]
-	"named_subtractor": "MOG2",
+	"named_subtractor": "GMG",
 
-	"MOG2_params": {
-		"detectShadows": false,
-		"history": 100
+	"CNT_params": {
+		"minPixelStability": 30,
+		"useHistory": true,
+		// 15*60
+		"maxPixelStability": 2000,
+		"isParallel": true
 	},
 	// MxN-size and number of iterations of erode kernel
 	// 3
