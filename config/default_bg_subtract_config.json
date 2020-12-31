@@ -1,4 +1,7 @@
 {
+	// Default background subtraction algorithms.  No parameters will be set
+	// no erode and dialate operations
+
 	// indicate whether the picamera should be used
 	"picamera": false,
 
@@ -7,42 +10,20 @@
 
 	// background subtractor
 	// valid values are [CNT GMG MOG GSOC LSBP]
-	"named_subtractor": "CNT",
-
-	"MOG_params": {
-		"history": 100,
-		"nmixtures": 5,
-		"backgroundRatio": 0.7,
-		"noiseSigma": 0
-	},
-
-	"GMG_params": {
-		"initializationFrames": 20,
-		"decisionThreshold": 0.9
-	},
-
-	"CNT_params": {
-		"minPixelStability": 1,
-		"useHistory": true,
-		// 15*60
-		"maxPixelStability": 900,
-		"isParallel": true
-	},
+	"named_subtractor": "MOG2",
 
 	"MOG2_params": {
 		"detectShadows": false,
 		"history": 100
 	},
-
-
 	// MxN-size and number of iterations of erode kernel
 	// 3
-	"erode_kernel": 3,
+	"erode_kernel": 0,
 	"erode_iterations": 2,
 
 	// MxN-size and number of iterations of dilate kernel
 	// 5
-	"dilate_kernel": 5,
+	"dilate_kernel": 0,
 	"dilate_iterations": 3,
 
 	// minimum pixels required for a valid foreground (motion) blob
@@ -66,7 +47,7 @@
 	"detected_motion_dir": "motion",
 
 	// flag to indicate if snap shot frames should be written
-	"write_snaps": true,
+	"write_snaps": false,
 
 	// number of frames to skip between writing frames of motion
 	"frames_between_snaps": 10,

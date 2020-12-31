@@ -51,8 +51,19 @@ class BackgroundSubtractor():
         self.annotate_image = annotate_background_motion
 
 
-    def apply(self, image):
-        mask = self.subtractor.apply(image)
+    def apply(self, image, motion_roi_rects=None):
+
+        mask = None
+
+        if motion_roi_rects is not None and len(motion_roi_rects) > 0:
+            masked_frame = np.zeros(image.shape, dtype=np.uint8)
+            for roi in motion_roi_rects:
+                image_roi = image[roi[1]:roi[3], roi[0]:roi[2]]
+                masked_frame[roi[1]:roi[3], roi[0]:roi[2]] = image_roi
+            mask = self.subtractor.apply(masked_frame)
+        else:
+            mask = self.subtractor.apply(image)
+
         # perform erosions and dilations to eliminate noise and fill gaps
         if self.eKernel is not None:
             mask = cv2.erode(mask, self.eKernel,
