@@ -91,19 +91,19 @@ class BackgroundSubtractor():
             (x, y, radius) = [int(v) for v in (x, y, radius)]
 
             # only process motion contours above the specified size
-            print(radius, (contour_area / image_area))
+            # print(radius, (contour_area / image_area))
             if radius >= self.min_radius or (contour_area / image_area) >= self.min_area_ratio:
-                print("\t***MOTION")
                 motionThisFrame = True
                 self.framesWithoutMotion = 0
                 threshold_met_contours.append(c)
 
                 if self.annotate_image:
                     if radius >= self.min_radius:
-                        cv2.circle(image, (x, y), radius, (0, 255, 0), 2)
-                    # if (contour_area / image_area) >= self.min_area_ratio:
-                    #     cv2.rectangle(image, (rx, ry), (rx + rw, ry + rh),
-                    #               (0, 255, 0), 2)
+                        cv2.circle(image, (x, y), radius, (0, 0, 255), 4)
+                    if (contour_area / image_area) >= self.min_area_ratio:
+                        # print("\t***MOTION")
+                        cv2.rectangle(image, (rx, ry), (rx + rw, ry + rh),
+                                  (0, 255, 0), 2)
 
         if not motionThisFrame:
             self.framesWithoutMotion += 1
