@@ -17,11 +17,13 @@ In the second part of the series, we will use the information we learn here to c
 
 While this project can be run on a laptop, the goal was to make the processing efficient enough to run on a RaspberryPI 4.
 
-The final project was tested on a RPi4.
+When running on the RPi4, no video was displayed, because the goal was to detect the motion and save some still captures.  
+
+The final project was tested on a RPi4.  
 
 ## Introduction
 
-In this first part, we are going to monitor trail usage by using 'Background Subtraction' to detect motion from video collected using a Nest cam to monitor trail usage.
+In this first part, we are going to monitor trail usage by using 'Background Subtraction' to detect motion from video collected using a Nest cam.
 
 Once we have detected motion on the trail, we want to capture some still images that we can review to determine the kind of trail usage.
 
@@ -62,7 +64,7 @@ There are a number of different OpenCV algorithms.  This blog will look at a few
 
 * Use erode and dilate transformations 
 
-To reduce the background subtraction noise.  We will see that by removing the detailed movement, the algorithm speeds up.  This is very important to resource constrained devices such as the RaspberryPI.
+To reduce the background subtraction noise.  We will see that by removing the non-trail movement, the algorithm speeds up.  This is very important to resource constrained devices such as the RaspberryPI.
 
 * Use LabelImg to create rectangular masks of 'Regions of Interest' or ROIs.
 
@@ -118,9 +120,9 @@ We will see later, this project is setup to allow for the following Background S
 
 Specifically this project will look at a subset of these.
 
-Using the BS classes is as easy as passing a frame from a video or webcam to the `apply' method of the class and the algorithm will return a mask.
+Using the BS classes is as easy as passing a frame from a video or webcam to the `apply` method of the class and the algorithm will return a mask.
 
-How mask is created is depended upon the algorithm selected and the parameters used.
+How mask is created is dependent upon the algorithm selected and the parameters used.
 
 For example:
 
