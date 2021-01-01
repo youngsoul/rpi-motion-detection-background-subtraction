@@ -22,7 +22,7 @@
 	},
 
 	"CNT_params": {
-		"minPixelStability": 1,
+		"minPixelStability": 10,
 		"useHistory": true,
 		// 15*60
 		"maxPixelStability": 900,
@@ -56,10 +56,10 @@
 	// should boxes and circles be annotated for display?
 	"annotate_background_motion": true,
 
-	// should the video be shown on the screen?
-	"display": true,
+	// should the video be shown in an OpenCV window
+	"display_video": true,
 
-	// should the subtracted background mask be shown
+	// should the subtracted background mask be shown in an OpenCV window
 	"display_mask": true,
 
 	// directory to store detected motion
@@ -72,7 +72,11 @@
 	"frames_between_snaps": 10,
 
 	// If Motion ROI rectangles are provided should they be displayed
-	"display_motion_roi": true
+	"display_motion_roi": true,
+
+	// Log Motion Status
+	"log_motion_status": true
+
 
 
 }

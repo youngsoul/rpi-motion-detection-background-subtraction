@@ -13,7 +13,7 @@ python main.py --video-file ./media/walkers2.mp4 --pascal-voc ./config/motion_ro
 
 
 """
-from BackgroundSubtractUtil import BackgroundSubtractor
+from utils.BackgroundSubtractUtil import BackgroundSubtractor
 from utils.conf import Conf
 import cv2
 import time
@@ -27,13 +27,12 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("--bg-config", required=False, default="./config/bg_subtract_config.json", help="path to the background subtraction config json file")
     ap.add_argument("--slow-motion", action='store_true', help="When motion detected, slow down video")
+    ap.add_argument("--wait-on-start", action='store_true', help="After showing the first frame, wait for a key to be pressed to continue")
     ap.add_argument("--video-file", required=True, help="Full path to video file")
     ap.add_argument("--pascal-voc", required=False, help="Path to rectangle annotated file in PascalVOC format with ROIs to look for mation")
     args = vars(ap.parse_args())
 
     conf = Conf(args['bg_config'])
-
-    bg_sub = BackgroundSubtractor(**conf.to_dict())
 
     original_window_name = 'Original'
     cv2.namedWindow(original_window_name, cv2.WINDOW_NORMAL)
@@ -71,12 +70,19 @@ if __name__ == '__main__':
             ymax = int(box.find("ymax").text)
             motion_roi_rects.append((xmin,ymin,xmax, ymax))
 
-    start = False
+    bg_sub = BackgroundSubtractor(**conf.to_dict(), motion_roi_rects=motion_roi_rects)
 
+    wait_on_start = args.get('wait_on_start', False)
+
+    frames_with_motion = 0
+    total_frames = 0
     while True:
         ret, frame = cap.read()
         if frame is None:
             break
+
+        total_frames += 1
+
 
         # frame = imutils.resize(frame, width=800)
         original = frame.copy()
@@ -93,9 +99,13 @@ if __name__ == '__main__':
         day_outputdir = Path() / conf['detected_motion_dir'] / day_timestring
         day_outputdir.mkdir(parents=True, exist_ok=True)
 
-        motionThisFrame, framesWithoutMotion, contours, frame, mask, mask_rect = bg_sub.apply(frame, motion_roi_rects=motion_roi_rects)
+        motionThisFrame, framesWithoutMotion, contours, frame, mask, mask_rect = bg_sub.apply(frame)
+
+        if conf['log_motion_status']:
+            print(f"Motion This Frame: {motionThisFrame}")
 
         if motionThisFrame:
+            frames_with_motion += 1
             sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
             for contour in sorted_contours:
                 (rx, ry, rw, rh) = cv2.boundingRect(contour)
@@ -114,9 +124,11 @@ if __name__ == '__main__':
                 cv2.imwrite(snap[0], snap[1])
             snap_buffer = []
 
-        cv2.imshow(mask_window_name, mask)
+        if conf['display_mask']:
+            cv2.imshow(mask_window_name, mask)
 
-        cv2.imshow(original_window_name, frame)
+        if conf['display_video']:
+            cv2.imshow(original_window_name, frame)
 
         key = cv2.waitKey(3) & 0xFF
 
@@ -124,9 +136,9 @@ if __name__ == '__main__':
         if key == ord("q"):
             break
 
-        if start == False:
+        if wait_on_start == True:
             cv2.waitKey(0)
-            start = True
+            wait_on_start = False
 
         if motionThisFrame and args['slow_motion'] == True:
             time.sleep(0.5)
@@ -135,6 +147,8 @@ if __name__ == '__main__':
         for snap in snap_buffer:
             cv2.imwrite(snap[0], snap[1])
         snap_buffer = []
+
+    print(f"Percentage of frames with motion: {(frames_with_motion/total_frames)*100:.2f}%")
 
     cap.release()
     cv2.destroyAllWindows()

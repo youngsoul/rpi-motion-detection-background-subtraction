@@ -1,0 +1,64 @@
+{
+	// Default background subtraction algorithms.  No parameters will be set
+	// no erode and dialate operations
+
+	// indicate whether the picamera should be used
+	"picamera": false,
+
+	// video src value.  typicall 0 but not always
+	"camera_src": 0,
+
+	// background subtractor
+	// valid values are [CNT GMG MOG GSOC LSBP]
+	"named_subtractor": "CNT",
+
+	"CNT_params": {
+		"minPixelStability": 30,
+		"useHistory": true,
+		// 15*60
+		"maxPixelStability": 2000,
+		"isParallel": true
+	},
+	// MxN-size and number of iterations of erode kernel
+	// 3
+	"erode_kernel": 3,
+	"erode_iterations": 2,
+
+	// MxN-size and number of iterations of dilate kernel
+	// 5
+	"dilate_kernel": 5,
+	"dilate_iterations": 3,
+
+	// minimum pixels required for a valid foreground (motion) blob
+	"min_radius": 10000,
+
+	// area of bound rect of area moved / area of frame
+	// if the area bounding box over the 'thing' that is moving divided by the frame area
+	// is above a percentage threshold, then consider movement detected
+	"min_area_ratio": 0.015,
+
+	// should boxes and circles be annotated for display?
+	"annotate_background_motion": false,
+
+	// should the video be shown on the screen?
+	"display_video": true,
+
+	// should the subtracted background mask be shown
+	"display_mask": true,
+
+	// directory to store detected motion
+	"detected_motion_dir": "motion",
+
+	// flag to indicate if snap shot frames should be written
+	"write_snaps": false,
+
+	// number of frames to skip between writing frames of motion
+	"frames_between_snaps": 10,
+
+	// If Motion ROI rectangles are provided should they be displayed
+	"display_motion_roi": true,
+
+	// Log Motion Status
+	"log_motion_status": true
+
+}
