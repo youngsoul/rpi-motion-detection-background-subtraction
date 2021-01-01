@@ -34,15 +34,17 @@ if __name__ == '__main__':
 
     conf = Conf(args['bg_config'])
 
-    original_window_name = 'Original'
-    cv2.namedWindow(original_window_name, cv2.WINDOW_NORMAL)
-    cv2.resizeWindow(original_window_name, 600, 600)
-    cv2.moveWindow(original_window_name, 600, 100)
+    if conf['display_video']:
+        original_window_name = 'Original'
+        cv2.namedWindow(original_window_name, cv2.WINDOW_NORMAL)
+        cv2.resizeWindow(original_window_name, 600, 600)
+        cv2.moveWindow(original_window_name, 600, 100)
 
-    subtractor_name = conf['named_subtractor']
-    mask_window_name = f'{subtractor_name} Mask'
-    cv2.namedWindow(mask_window_name, cv2.WINDOW_NORMAL)
-    cv2.moveWindow(mask_window_name, 200, 250)
+    if conf['display_mask']:
+        subtractor_name = conf['named_subtractor']
+        mask_window_name = f'{subtractor_name} Mask'
+        cv2.namedWindow(mask_window_name, cv2.WINDOW_NORMAL)
+        cv2.moveWindow(mask_window_name, 200, 250)
 
     cap = cv2.VideoCapture(args['video_file'])
     # set this to a large value so the first frame is saved, i.e. greater than the
@@ -82,7 +84,6 @@ if __name__ == '__main__':
             break
 
         total_frames += 1
-
 
         # frame = imutils.resize(frame, width=800)
         original = frame.copy()
@@ -130,18 +131,19 @@ if __name__ == '__main__':
         if conf['display_video']:
             cv2.imshow(original_window_name, frame)
 
-        key = cv2.waitKey(3) & 0xFF
+        if conf['display_mask'] or conf['display_video']:
+            key = cv2.waitKey(3) & 0xFF
 
-        # if the `q` key was pressed, break from the loop
-        if key == ord("q"):
-            break
+            # if the `q` key was pressed, break from the loop
+            if key == ord("q"):
+                break
 
-        if wait_on_start == True:
-            cv2.waitKey(0)
-            wait_on_start = False
+            if wait_on_start == True:
+                cv2.waitKey(0)
+                wait_on_start = False
 
-        if motionThisFrame and args['slow_motion'] == True:
-            time.sleep(0.5)
+            if motionThisFrame and args['slow_motion'] == True:
+                time.sleep(0.2)
 
     if len(snap_buffer) > 0:
         for snap in snap_buffer:
@@ -151,4 +153,5 @@ if __name__ == '__main__':
     print(f"Percentage of frames with motion: {(frames_with_motion/total_frames)*100:.2f}%")
 
     cap.release()
-    cv2.destroyAllWindows()
+    if conf['display_mask'] or conf['display_video']:
+        cv2.destroyAllWindows()

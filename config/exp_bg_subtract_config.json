@@ -35,7 +35,8 @@
 	// area of bound rect of area moved / area of frame
 	// if the area bounding box over the 'thing' that is moving divided by the frame area
 	// is above a percentage threshold, then consider movement detected
-	"min_area_ratio": 0.015,
+	// 0.015 captures the ATV but not the bicycle.  To get ATV, walkers, bikes use 0.001
+	"min_area_ratio": 0.001,
 
 	// should boxes and circles be annotated for display?
 	"annotate_background_motion": false,

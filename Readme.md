@@ -322,7 +322,7 @@ The `min_area_ratio` is looking for the area of the motion rectangle relative to
 
 ```text
 	"min_radius": 10000,
-	"min_area_ratio": 0.015,
+	"min_area_ratio": 0.001,
 
 ```
 
@@ -350,7 +350,7 @@ This class will then mask out so just those rectangle are part in the resulting 
 
 ![ROIMASKIMAGE](docmedia/roi-mask-image.gif)
 
-Now if we use this image to perform background subtraction it will only do it on the part of the image we care about.
+Now if we use this image to perform background subtraction it will only process the part of the image we care about.
 
 When running this version it will look like:
 
@@ -361,6 +361,35 @@ Notice that ONLY the ROI region shows any motion and the percentage of frames wi
 `Percentage of frames with motion: 17.77%`
 
 Your scenario might not lend itself to creating ROI, but if it does it can help tremendously in reducing the motion noise and the processing involved with background subtraction.
+
+## Final Motion Detection 
+
+Note that in all examples below the `--slow-motion` option was used to slow the video when motion was detected to better examine the motion mask and video together.
+
+
+### ATV
+
+![CNTATVFINAL](./docmedia/cnt-final-run.gif)
+
+### ATV2
+
+![CNTATV2FINAL](./docmedia/cnt-atv2-final-run.gif)
+
+### ATV3
+
+![CNTATV3FINAL](./docmedia/cnt-atv3-final-run.gif)
+
+### Bicycle
+
+![CNTBIKEFINAL](./docmedia/cnt-bicycle-final-run.gif)
+
+### Bicycle2
+
+![CNTBIKE2FINAL](./docmedia/cnt-bicycle2-final-run.gif)
+
+### Walkers
+
+![CNTWALKERSFINAL](./docmedia/cnt-walkers-final-run.gif)
 
 ## Running on the RaspberryPI
 
