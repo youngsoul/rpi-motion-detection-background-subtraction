@@ -75,7 +75,7 @@ Masking out ROI is not always required, or even desirable.  This will depend upo
 
 ## Attribution
 
-All information is discovered and learned from somewhere and someone else.  The information presented here is no different.  What led me to create this blog and project was the [RaspberryPI for Computer Vision](https://www.pyimagesearch.com/raspberry-pi-for-computer-vision/) series by Dr. Adrian Rosebrock creator of the [PyimageSearch.com](https://pyimagesearch.com) website.
+All information is discovered and learned from somewhere and someone else.  The information presented here is no different.  What led me to create this project was the [RaspberryPI for Computer Vision](https://www.pyimagesearch.com/raspberry-pi-for-computer-vision/) series by Dr. Adrian Rosebrock creator of the [PyimageSearch.com](https://pyimagesearch.com) website.
 
 This project is inspired by the Hobbyist Bundle, 'Bird Feeder Monitor'.  Many of the examples in the Hobbyist bundle leverages background subtraction.  I decided to apply what I learned in the Hobbyist bundle to my problem of monitoring trail usage.
 
