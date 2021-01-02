@@ -9,11 +9,9 @@ Example Background Subtraction Mask
 ---
 ## Overview
 
-This is the first of a 2 part blog series.
+In this project we are going to focus on using OpenCV for background subtraction to detect motion.
 
-In this first part we are going to focus on using OpenCV for background subtraction to detect motion.
-
-In the second part of the series, we will use the information we learn here to create a facial recognition alarm system on the RaspberryPI
+We can then use the information from the project in future projects where we need to detect motion before starting other processes.
 
 While this project can be run on a laptop, the goal was to make the processing efficient enough to run on a RaspberryPI 4.
 
