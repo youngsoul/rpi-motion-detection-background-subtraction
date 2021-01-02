@@ -185,6 +185,11 @@ Contains the starting default values, and we will be changing this file as we go
 
 This is a PascalVOC formatted file from LabelImg tool.  It contains rectangles with regions of interest.  We will use this to mask out the 'ROuI' (regions of un-interest)
 
+* rpi_bg_subtract_config.json
+
+This configuration file is setup for the RPi and specifically turns off the display of the video as that kind of overhead is not suitable for the RPi.
+
+
 * classes.txt
 
 Another file generated from LabelImg
