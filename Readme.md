@@ -351,7 +351,7 @@ See: `./config/motion_roi.xml`
 
 This file is read as a command line option and the rectangles are provided to the constructor of the BackgroundSubtractor class.
 
-This class will then mask out so just those rectangle are part in the resulting image.
+This class will then mask out so just those rectangles are part in the resulting image and everything outside the region of interest will be black.
 
 ![ROIMASKIMAGE](docmedia/roi-mask-image.gif)
 
