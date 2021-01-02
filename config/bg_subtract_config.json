@@ -9,6 +9,11 @@
 	// valid values are [CNT GMG MOG GSOC LSBP]
 	"named_subtractor": "CNT",
 
+	// Parameters that are associated with each background subtractor
+	// Each background subtractor has its own set of initialization parameters.  This
+	// section allows those to be configured.
+	// the naming convention is:
+	// <named_subtractor>_params
 	"MOG_params": {
 		"history": 100,
 		"nmixtures": 5,
