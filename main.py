@@ -20,7 +20,7 @@ import time
 import argparse
 import datetime
 from pathlib import Path
-from bs4 import BeautifulSoup
+from utils.pascal_voc_util import read_pascal_voc_rectangles
 
 
 if __name__ == '__main__':
@@ -62,15 +62,7 @@ if __name__ == '__main__':
     motion_roi_rects = []
 
     if args.get('pascal_voc', None) is not None:
-        soup = BeautifulSoup(open(args.get('pascal_voc')).read(), "lxml")
-        boxes = soup.findAll('bndbox')
-
-        for box in boxes:
-            xmin = int(box.find("xmin").text)
-            ymin = int(box.find("ymin").text)
-            xmax = int(box.find("xmax").text)
-            ymax = int(box.find("ymax").text)
-            motion_roi_rects.append((xmin,ymin,xmax, ymax))
+        motion_roi_rects = read_pascal_voc_rectangles(args.get('pascal_voc'))
 
     bg_sub = BackgroundSubtractor(**conf.to_dict(), motion_roi_rects=motion_roi_rects)
 
