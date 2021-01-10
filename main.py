@@ -28,7 +28,7 @@ import os
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument("--bg-config", required=False, default="./config/bg_subtract_config.json", help="path to the background subtraction config json file")
+    ap.add_argument("--bg-config", required=False, default="./config/mac_bg_subtract_config.json", help="path to the background subtraction config json file")
     ap.add_argument("--slow-motion", action='store_true', help="When motion detected, slow down video")
     ap.add_argument("--wait-on-start", action='store_true', help="After showing the first frame, wait for a key to be pressed to continue")
     ap.add_argument("--video-file", required=True, help="Full path to video file")
