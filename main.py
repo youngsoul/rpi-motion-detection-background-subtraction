@@ -22,7 +22,9 @@ import datetime
 from pathlib import Path
 from utils.pascal_voc_util import read_pascal_voc_rectangles
 from utils.BackgroundImageWriterUtil import BackgroundImageWriter
-
+from utils.DropboxFileWatcherUpload import DropboxFileWatcherUpload
+from dotenv import load_dotenv
+import os
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
@@ -31,6 +33,7 @@ if __name__ == '__main__':
     ap.add_argument("--wait-on-start", action='store_true', help="After showing the first frame, wait for a key to be pressed to continue")
     ap.add_argument("--video-file", required=True, help="Full path to video file")
     ap.add_argument("--pascal-voc", required=False, help="Path to rectangle annotated file in PascalVOC format with ROIs to look for mation")
+    ap.add_argument("--upload-dropbox", action='store_true', help="After writing captured images, upload files to dropbox.  Assumes a .env file with dropbox access token")
     args = vars(ap.parse_args())
 
     conf = Conf(args['bg_config'])
@@ -72,6 +75,15 @@ if __name__ == '__main__':
 
     wait_on_start = args.get('wait_on_start', False)
 
+    if conf["upload_dropbox"]:
+        load_dotenv()
+        env_path = conf['dropbox_env_file']
+        load_dotenv(dotenv_path=env_path)
+        access_token = os.getenv('dropbox_access_token')
+
+        bg_dropbox = DropboxFileWatcherUpload(dropbox_access_token=access_token, root_dir=conf['detected_motion_dir'], pattern="*.jpg", delete_after_process=conf["delete_after_process"])
+        bg_dropbox.start()
+
     frames_with_motion = 0
     total_frames = 0
     while True:
@@ -93,9 +105,10 @@ if __name__ == '__main__':
         day_timestring = timestamp.strftime("%Y%m%d")
         hms_timestring = timestamp.strftime("%Y%m%d-%H%M%S.%f")[:-3]
 
-        day_outputdir = Path() / conf['detected_motion_dir'] / day_timestring
-        day_outputdir.mkdir(parents=True, exist_ok=True)
+        day_outputdir_path = f"{conf['detected_motion_dir']}/{day_timestring}"
+        day_outputdir = Path(day_outputdir_path)
 
+        day_outputdir.mkdir(parents=True, exist_ok=True)
         motionThisFrame, framesWithoutMotion, contours, frame, mask, mask_rect = bg_sub.apply(frame)
 
         if conf['log_motion_status']:
@@ -139,3 +152,6 @@ if __name__ == '__main__':
     cap.release()
     if conf['display_mask'] or conf['display_video']:
         cv2.destroyAllWindows()
+
+    if conf["upload_dropbox"]:
+        bg_dropbox.drain()

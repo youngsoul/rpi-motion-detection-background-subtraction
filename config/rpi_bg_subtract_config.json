@@ -63,7 +63,7 @@
 	"display_mask": false,
 
 	// directory to store detected motion
-	"detected_motion_dir": "motion",
+	"detected_motion_dir": "/home/users/rpi/bgmotion/motion",
 
 	// flag to indicate if snap shot frames should be written
 	"write_snaps": false,
@@ -75,8 +75,10 @@
 	"display_motion_roi": false,
 
 	// Log Motion Status
-	"log_motion_status": true
+	"log_motion_status": true,
 
-
-
+	// upload to dropbox
+	"upload_dropbox": true,
+	"delete_after_process": true,
+	"dropbox_env_file": "/Users/patrickryan/Development/python/mygithub/rpi-motion-detection-background-subtraction/utils/.env"
 }
