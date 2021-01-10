@@ -93,7 +93,10 @@ if __name__ == '__main__':
     frames_with_motion = 0
     total_frames = 0
     while True:
-        frame = cap.read()
+        if args.get("video_file", None) != None:
+            rtn, frame = cap.read()
+        else:
+            frame = cap.read()
         if frame is None:
             break
 
