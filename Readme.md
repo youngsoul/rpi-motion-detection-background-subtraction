@@ -37,10 +37,6 @@ An aspect of background subtraction that makes it tricky for outdoor use, is tha
 
 ![VideoCollage](./docmedia/video_collage.gif)
 
-## Sidenote on the scope of this project
-
-To limit the scope of this project, once still images of the motion are captured they are only written to the RPi.  A more sophisticated project would push these to cloud storage, or create a small video of the motion, tweet and SMS message the event.  But the focus for this project was to get the background subtraction and motion detection working.  After that, we can look to extend the capability.
-
 ## Why do we care about Background Subtraction
 
 In the context of this project using a RaspberryPI we do not want to run the heavy cpu algorithms like Face Recognition or Object Recognition unless there is motion detected.
@@ -70,6 +66,9 @@ We will generate a PascalVOC formatted file of the regions along the path we wou
 
 Masking out ROI is not always required, or even desirable.  This will depend upon your use case.  For example, in part 2 where we create an facial recognition alarm system we do NOT mask out any regions.
 
+* Save captured images in a background thread
+
+* Save captures images to dropbox in a background thread
 
 ## Attribution
 
@@ -89,6 +88,17 @@ This project is inspired by the Hobbyist Bundle, 'Bird Feeder Monitor'.  Many of
 
 ```
 If you are interested in Computer Vision particularly as it relates to the RaspberryPI you will not find a better resource, IMHO.
+
+I was also inspired to include a Dropbox integration after reading this PyImageSearch Blog:
+
+```text
+Adrian Rosebrock, 
+Home surveillance and motion detection with the Raspberry Pi, Python, OpenCV, and Dropbox, 
+PyImageSearch, 
+https://www.pyimagesearch.com/2015/06/01/home-surveillance-and-motion-detection-with-the-raspberry-pi-python-and-opencv/,
+accessed on 10 January 2021
+
+```
 
 ## OpenCV Background Subtraction
 
