@@ -74,7 +74,7 @@
 	"write_snaps": true,
 
 	// number of frames to skip between writing frames of motion
-	"frames_between_snaps": 10,
+	"frames_between_snaps": 7,
 
 	// If Motion ROI rectangles are provided should they be displayed
 	"display_motion_roi": true,

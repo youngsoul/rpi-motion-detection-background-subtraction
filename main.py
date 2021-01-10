@@ -21,6 +21,7 @@ import argparse
 import datetime
 from pathlib import Path
 from utils.pascal_voc_util import read_pascal_voc_rectangles
+from utils.BackgroundImageWriterUtil import BackgroundImageWriter
 
 
 if __name__ == '__main__':
@@ -66,6 +67,9 @@ if __name__ == '__main__':
 
     bg_sub = BackgroundSubtractor(**conf.to_dict(), motion_roi_rects=motion_roi_rects)
 
+    image_writer = BackgroundImageWriter(frames_between_writes=conf['frames_between_snaps'])
+    image_writer.start()
+
     wait_on_start = args.get('wait_on_start', False)
 
     frames_with_motion = 0
@@ -105,17 +109,9 @@ if __name__ == '__main__':
                 cv2.rectangle(frame, (rx, ry), (rx + rw, ry + rh),(255, 0, 0), 2)
 
             if conf['write_snaps']:
-                framesSinceSnap += 1
-                if framesSinceSnap >= conf['frames_between_snaps']:
-                    image_filename = f"{hms_timestring}.jpg"
-                    snapPath = day_outputdir / image_filename
-                    snap_buffer.append( (str(snapPath), original))
-                    framesSinceSnap=0
-
-        if framesWithoutMotion > 24 and len(snap_buffer) > 0:
-            for snap in snap_buffer:
-                cv2.imwrite(snap[0], snap[1])
-            snap_buffer = []
+                image_filename = f"{hms_timestring}.jpg"
+                image_fqn = day_outputdir / image_filename
+                image_writer.add_image_to_queue(str(image_fqn), original)
 
         if conf['display_mask']:
             cv2.imshow(mask_window_name, mask)
@@ -137,12 +133,8 @@ if __name__ == '__main__':
             if motionThisFrame and args['slow_motion'] == True:
                 time.sleep(0.2)
 
-    if len(snap_buffer) > 0:
-        for snap in snap_buffer:
-            cv2.imwrite(snap[0], snap[1])
-        snap_buffer = []
-
     print(f"Percentage of frames with motion: {(frames_with_motion/total_frames)*100:.2f}%")
+    image_writer.drain()
 
     cap.release()
     if conf['display_mask'] or conf['display_video']:

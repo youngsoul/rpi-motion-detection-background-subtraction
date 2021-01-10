@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import imutils
-
+from utils.image_util import mask_image_to_rectanges
 
 class BackgroundSubtractor():
 
@@ -58,11 +58,8 @@ class BackgroundSubtractor():
         motion_roi_rects = self.motion_roi_rects
 
         if motion_roi_rects is not None and len(motion_roi_rects) > 0:
-            masked_frame = np.zeros(image.shape, dtype=np.uint8)
-            for roi in motion_roi_rects:
-                image_roi = image[roi[1]:roi[3], roi[0]:roi[2]]
-                masked_frame[roi[1]:roi[3], roi[0]:roi[2]] = image_roi
-            mask = self.subtractor.apply(masked_frame)
+            masked_image = mask_image_to_rectanges(image, motion_roi_rects)
+            mask = self.subtractor.apply(masked_image)
         else:
             mask = self.subtractor.apply(image)
 
