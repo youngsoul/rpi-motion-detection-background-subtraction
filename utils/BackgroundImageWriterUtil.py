@@ -16,10 +16,19 @@ class BackgroundImageWriter:
         self.Q = None
         self.frame_between_writes = frames_between_writes
         self.empty_q_poll_wait = empty_q_poll_wait
+        self.frames_since_writing = 100000
 
 
     def add_image_to_queue(self, fqn, image):
-        self.Q.put_nowait((fqn, image))
+        try:
+            self.frames_since_writing += 1
+
+            if self.frames_since_writing > self.frame_between_writes:
+                self.Q.put_nowait((fqn, image))
+                self.frames_since_writing = 0
+
+        except queue.Full:
+            print(f"Queue Full: {self.Q.qsize()}")
 
     def start(self):
         # indicate that we are recording, start the video writer,
@@ -34,20 +43,13 @@ class BackgroundImageWriter:
         self.thread.start()
 
     def _write(self):
-        # intialize it large so we always write the first frame, then
-        # start the skip count
-        frames_since_writing = 1000000
-
         while True:
             # check to see if there are entries in the queue
             if not self.Q.empty():
-                frames_since_writing += 1
                 # grab the next frame in the queue and write it
                 # to the video file
                 fqn, frame = self.Q.get()
-                if frames_since_writing > self.frame_between_writes:
-                    frames_since_writing = 0
-                    cv2.imwrite(fqn, frame)
+                cv2.imwrite(fqn, frame)
 
             # otherwise, the queue is empty, so sleep for a bit
             # so we don't waste CPU cycles

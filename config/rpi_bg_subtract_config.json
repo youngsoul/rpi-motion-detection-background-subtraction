@@ -3,7 +3,7 @@
 	"picamera": false,
 
 	// video src value.  typicall 0 but not always
-	"camera_src": 0,
+	"camera_src": 1,
 
 	// background subtractor
 	// valid values are [CNT GMG MOG GSOC LSBP]
@@ -51,34 +51,35 @@
 	// area of bound rect of area moved / area of frame
 	// if the area bounding box over the 'thing' that is moving divided by the frame area
 	// is above a percentage threshold, then consider movement detected
-	"min_area_ratio": 0.001,
+	"min_area_ratio": 0.1,
 
 	// should boxes and circles be annotated for display?
 	"annotate_background_motion": false,
 
 	// should the video be shown in an OpenCV window
-	"display_video": false,
+	"display_video": true,
 
 	// should the subtracted background mask be shown in an OpenCV window
-	"display_mask": false,
+	"display_mask": true,
+
 
 	// directory to store detected motion
-	"detected_motion_dir": "/home/users/rpi/bgmotion/motion",
+	"detected_motion_dir": "/home/pi/dev/motion/motion",
 
 	// flag to indicate if snap shot frames should be written
-	"write_snaps": false,
+	"write_snaps": true,
 
 	// number of frames to skip between writing frames of motion
-	"frames_between_snaps": 10,
+	"frames_between_snaps": 75,
 
 	// If Motion ROI rectangles are provided should they be displayed
 	"display_motion_roi": false,
 
 	// Log Motion Status
-	"log_motion_status": true,
+	"log_motion_status": false,
 
 	// upload to dropbox
 	"upload_dropbox": true,
 	"delete_after_process": true,
-	"dropbox_env_file": "/Users/patrickryan/Development/python/mygithub/rpi-motion-detection-background-subtraction/utils/.env"
+	"dropbox_env_file": "/home/pi/dev/motion/utils/.env"
 }

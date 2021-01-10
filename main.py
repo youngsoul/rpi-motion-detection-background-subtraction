@@ -25,15 +25,15 @@ from utils.BackgroundImageWriterUtil import BackgroundImageWriter
 from utils.DropboxFileWatcherUpload import DropboxFileWatcherUpload
 from dotenv import load_dotenv
 import os
+from imutils.video import VideoStream
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument("--bg-config", required=False, default="./config/mac_bg_subtract_config.json", help="path to the background subtraction config json file")
     ap.add_argument("--slow-motion", action='store_true', help="When motion detected, slow down video")
     ap.add_argument("--wait-on-start", action='store_true', help="After showing the first frame, wait for a key to be pressed to continue")
-    ap.add_argument("--video-file", required=True, help="Full path to video file")
+    ap.add_argument("--video-file", required=False, help="Full path to video file")
     ap.add_argument("--pascal-voc", required=False, help="Path to rectangle annotated file in PascalVOC format with ROIs to look for mation")
-    ap.add_argument("--upload-dropbox", action='store_true', help="After writing captured images, upload files to dropbox.  Assumes a .env file with dropbox access token")
     args = vars(ap.parse_args())
 
     conf = Conf(args['bg_config'])
@@ -50,7 +50,13 @@ if __name__ == '__main__':
         cv2.namedWindow(mask_window_name, cv2.WINDOW_NORMAL)
         cv2.moveWindow(mask_window_name, 200, 250)
 
-    cap = cv2.VideoCapture(args['video_file'])
+    # Determine if we are reading a video or using the computer camera
+    if args.get("video_file", None) != None:
+        cap = cv2.VideoCapture(args['video_file'])
+    else:
+        cap = VideoStream(usePiCamera=conf['picamera'], src=conf['camera_src']).start()
+        time.sleep(2.0)
+
     # set this to a large value so the first frame is saved, i.e. greater than the
     # conf['frames_between_snaps'] value
     framesSinceSnap=10000
@@ -87,7 +93,7 @@ if __name__ == '__main__':
     frames_with_motion = 0
     total_frames = 0
     while True:
-        ret, frame = cap.read()
+        frame = cap.read()
         if frame is None:
             break
 
@@ -149,7 +155,9 @@ if __name__ == '__main__':
     print(f"Percentage of frames with motion: {(frames_with_motion/total_frames)*100:.2f}%")
     image_writer.drain()
 
-    cap.release()
+    if args.get("video_file", None) != None:
+        cap.release()
+
     if conf['display_mask'] or conf['display_video']:
         cv2.destroyAllWindows()
 
