@@ -32,8 +32,8 @@ if __name__ == '__main__':
     ap.add_argument("--bg-config", required=False, default="./config/mac_bg_subtract_config.json", help="path to the background subtraction config json file")
     ap.add_argument("--slow-motion", action='store_true', help="When motion detected, slow down video")
     ap.add_argument("--wait-on-start", action='store_true', help="After showing the first frame, wait for a key to be pressed to continue")
-    ap.add_argument("--video-file", required=False, help="Full path to video file")
-    ap.add_argument("--pascal-voc", required=False, help="Path to rectangle annotated file in PascalVOC format with ROIs to look for mation")
+    ap.add_argument("--video-file", required=False, help="Full path to video file to read from. If this is not set, then the Webcam will be used.")
+    ap.add_argument("--pascal-voc", required=False, help="Path to rectangle annotated file in PascalVOC format with ROIs to look for motion")
     args = vars(ap.parse_args())
 
     conf = Conf(args['bg_config'])
