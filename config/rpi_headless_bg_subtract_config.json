@@ -46,7 +46,7 @@
 	"dilate_iterations": 3,
 
 	// minimum pixels required for a valid foreground (motion) blob
-	"min_radius": 1000,
+	"min_radius": 100000,
 
 	// area of bound rect of area moved / area of frame
 	// if the area bounding box over the 'thing' that is moving divided by the frame area
@@ -57,10 +57,10 @@
 	"annotate_background_motion": false,
 
 	// should the video be shown in an OpenCV window
-	"display_video": true,
+	"display_video": false,
 
 	// should the subtracted background mask be shown in an OpenCV window
-	"display_mask": true,
+	"display_mask": false,
 
 
 	// directory to store detected motion

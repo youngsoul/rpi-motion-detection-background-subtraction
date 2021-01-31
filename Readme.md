@@ -414,6 +414,31 @@ Make sure you set:
 
 Running on my RPi I get 18.18% of the frame had motion, most of which are during the warmup period.
 
+### Startup script
+
+see: `on_reboot.sh`
+
+```shell
+#!/bin/bash
+
+source "/home/pi/.virtualenvs/cv2_env/bin/activate"
+cd /home/pi/dev/motion
+python main.py --bg-config ./config/rpi_headless_bg_subtract_config.json --pascal-voc ./config/condo_background.xml
+
+
+```
+
+### CRON
+----- in terminal --------
+sudo crontab -e
+
+at the end of the file
+
+@reboot /full/path/to/script/on_reboot.sh
+
+This project was testing in a front door situation as well as outdoor trail. Indoor even shadows caused false motion detection so a bounding box of the ROI of the front door was created.
+
+
 ## Wrap Up
 
 In this project we looked at Background Subtraction for use with Motion Detection.
