@@ -7,7 +7,7 @@
 
 	// background subtractor
 	// valid values are [CNT GMG MOG GSOC LSBP]
-	"named_subtractor": "CNT",
+	"named_subtractor": "MOG",
 
 	// Parameters that are associated with each background subtractor
 	// Each background subtractor has its own set of initialization parameters.  This
@@ -71,7 +71,7 @@
 	"detected_motion_dir": "/Users/patrickryan/Development/python/mygithub/rpi-motion-detection-background-subtraction/motion",
 
 	// flag to indicate if snap shot frames should be written
-	"write_snaps": true,
+	"write_snaps": false,
 
 	// number of frames to skip between writing frames of motion
 	"frames_between_snaps": 7,
