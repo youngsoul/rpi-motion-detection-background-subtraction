@@ -57,6 +57,8 @@ class BackgroundSubtractor():
         mask = None
         motion_roi_rects = self.motion_roi_rects
 
+        image = cv2.GaussianBlur(image, (3,3), 0)
+
         if motion_roi_rects is not None and len(motion_roi_rects) > 0:
             masked_image = mask_image_to_rectanges(image, motion_roi_rects)
             mask = self.subtractor.apply(masked_image)

@@ -1,0 +1,9 @@
+imutils
+python-dotenv
+opencv-python
+opencv-contrib-python
+JSON_minify
+beautifulsoup4
+dropbox
+boto3
+lxml

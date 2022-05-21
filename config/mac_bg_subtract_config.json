@@ -71,7 +71,7 @@
 	"detected_motion_dir": "/Users/patrickryan/Development/python/mygithub/rpi-motion-detection-background-subtraction/motion",
 
 	// flag to indicate if snap shot frames should be written
-	"write_snaps": false,
+	"write_snaps": true,
 
 	// number of frames to skip between writing frames of motion
 	"frames_between_snaps": 7,
@@ -83,8 +83,8 @@
 	"log_motion_status": true,
 
 	// upload to dropbox
-	"upload_dropbox": true,
-	"delete_after_process": true,
+	"upload_dropbox": false,
+	"delete_after_process": false,
 	"dropbox_env_file": "/Users/patrickryan/Development/python/mygithub/rpi-motion-detection-background-subtraction/utils/.env"
 
 

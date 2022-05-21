@@ -268,3 +268,4 @@ dmypy.json
 cython_debug/
 
 motion/
+/aws_output/

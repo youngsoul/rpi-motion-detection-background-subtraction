@@ -1,7 +1,7 @@
 """
 Usage:
 
-python main.py --video-file ./media/atv.mp4
+python main.py --video-file ./media/atv.mp4 --pascal-voc ./config/motion_roi.xml
 
 python main.py --video-file ./media/walkers2.mp4 --pascal-voc ./config/motion_roi.xml
 

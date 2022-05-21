@@ -11,7 +11,7 @@ class DropboxFileWatcherUpload(BackgroundFileProcessor):
             dbx.files_upload(f.read(), file_to)
 
     def __init__(self, dropbox_access_token: str,  root_dir: str, include_parent_dir_in_to_file=True, pattern:str="*", delete_after_process: bool=False, batch_size: int=10, polling_time: int=5 ):
-        BackgroundFileProcessor.__init__(self, root_dir, pattern, delete_after_process, batch_size, polling_time)
+        super().__init__(root_dir, pattern, delete_after_process, batch_size, polling_time)
 
         self.include_parent_dir_in_to_file = include_parent_dir_in_to_file
         self.dropbox_access_token = dropbox_access_token

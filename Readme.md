@@ -100,6 +100,30 @@ accessed on 10 January 2021
 
 ```
 
+## Install
+
+* First, create a python virtual environment
+
+`python3 -m venv venv`
+
+* Activate python virtual environment
+
+`source venv/bin/activate`
+
+* Install required libraries
+
+`pip install -r requirements.txt`
+
+To add a library, update the requirements.in file
+
+* Generate requirements.txt
+
+`pip-compile`
+
+* Re-run requirements.txt
+
+`pip install -r requirements.txt`
+
 ## OpenCV Background Subtraction
 
 [OpenCV Background Subtraction](https://docs.opencv.org/3.4/d1/dc5/tutorial_background_subtraction.html)
