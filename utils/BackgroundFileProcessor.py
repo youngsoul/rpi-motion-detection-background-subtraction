@@ -33,8 +33,9 @@ class BackgroundFileProcessor:
                     file_path = path_element.absolute()
                     self.process_file(file_path)
                     if self.delete_after_process:
-                        print(f"deleting....{file_path}")
-                        Path(file_path).unlink()
+                        if Path(file_path).exists():
+                            print(f"deleting....{file_path}")
+                            Path(file_path).unlink()
                 except Exception as exc:
                     print(exc)
 

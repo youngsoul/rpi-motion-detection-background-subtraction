@@ -1,8 +1,11 @@
+import sys
+sys.path.append("..")
+
 from utils.BackgroundFileProcessor import BackgroundFileProcessor
 from pathlib import Path
 import boto3
 from rekognition_utils import RekognitionLabel
-from cv2_utils import read_image_as_byte_str, draw_label_bounding_box
+from cv2_utils import read_image, draw_label_bounding_box
 from typing import List
 
 
@@ -24,7 +27,7 @@ class AWSRekognitionFileWatcher(BackgroundFileProcessor):
         image_path = Path(absolute_file_path)
 
         try:
-            img_str, image, h, w = read_image_as_byte_str(str(image_path), convert_bgr2rgb=False)
+            img_str, image, rgb_image, h, w = read_image(str(image_path))
             image_data = {'Bytes': img_str}
             response = self.rekognition_client.detect_labels(
                 Image=image_data,
@@ -44,7 +47,7 @@ class AWSRekognitionFileWatcher(BackgroundFileProcessor):
                         image_path.replace(dest_image_path)
 
                     # break out this loop, once we find one label save it
-                    break
+                    # break
 
         except Exception as exc:
             pass

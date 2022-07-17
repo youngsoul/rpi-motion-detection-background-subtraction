@@ -28,8 +28,12 @@ jmespath==1.0.0
     #   botocore
 json-minify==0.3.0
     # via -r requirements.in
-lxml==4.8.0
+labelimg==1.8.6
     # via -r requirements.in
+lxml==4.8.0
+    # via
+    #   -r requirements.in
+    #   labelimg
 numpy==1.22.4
     # via
     #   opencv-contrib-python
@@ -40,6 +44,12 @@ opencv-python==4.5.5.64
     # via -r requirements.in
 ply==3.11
     # via stone
+pyqt5==5.15.7
+    # via labelimg
+pyqt5-qt5==5.15.2
+    # via pyqt5
+pyqt5-sip==12.11.0
+    # via pyqt5
 python-dateutil==2.8.2
     # via botocore
 python-dotenv==0.20.0

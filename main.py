@@ -13,6 +13,8 @@ python main.py --video-file ./media/walkers2.mp4 --pascal-voc ./config/motion_ro
 
 
 """
+import sys
+
 from utils.BackgroundSubtractUtil import BackgroundSubtractor
 from utils.conf import Conf
 import cv2
@@ -33,6 +35,7 @@ if __name__ == '__main__':
     ap.add_argument("--slow-motion", action='store_true', help="When motion detected, slow down video")
     ap.add_argument("--wait-on-start", action='store_true', help="After showing the first frame, wait for a key to be pressed to continue")
     ap.add_argument("--video-file", required=False, help="Full path to video file to read from. If this is not set, then the Webcam will be used.")
+    ap.add_argument("--video-dir", required=False, help="Full path to directory that contains video files. The directory and all subdirectories will be searched for video files")
     ap.add_argument("--pascal-voc", required=False, help="Path to rectangle annotated file in PascalVOC format with ROIs to look for motion")
     args = vars(ap.parse_args())
 
@@ -51,8 +54,13 @@ if __name__ == '__main__':
         cv2.moveWindow(mask_window_name, 200, 250)
 
     # Determine if we are reading a video or using the computer camera
+    video_files_to_process = []
     if args.get("video_file", None) != None:
-        cap = cv2.VideoCapture(args['video_file'])
+        video_files_to_process.append(args['video_file'])
+    elif args.get("video_dir", None) != None:
+        path = Path(args.get("video_dir"))
+        for p in path.rglob("*.MP4"):
+            video_files_to_process.append(p.absolute())
     else:
         cap = VideoStream(usePiCamera=conf['picamera'], src=conf['camera_src']).start()
         time.sleep(2.0)
@@ -92,74 +100,77 @@ if __name__ == '__main__':
 
     frames_with_motion = 0
     total_frames = 0
-    while True:
-        if args.get("video_file", None) != None:
+    for i, vid in enumerate(video_files_to_process):
+        print(f"Process file: {vid}.  {(i/len(video_files_to_process))*100:.1f} complete")
+
+        cap = cv2.VideoCapture(str(vid))
+        while True:
             rtn, frame = cap.read()
-        else:
-            frame = cap.read()
-        if frame is None:
-            break
-
-        total_frames += 1
-
-        # frame = imutils.resize(frame, width=800)
-        original = frame.copy()
-
-        # Draw the ROIs rectangles on the frame
-        if args.get('pascal_voc') and conf['display_motion_roi']:
-            for roi in motion_roi_rects:
-                cv2.rectangle(frame, (roi[0], roi[1]), (roi[2], roi[3]), (255, 255, 0), 2)
-
-        timestamp = datetime.datetime.now()
-        day_timestring = timestamp.strftime("%Y%m%d")
-        hms_timestring = timestamp.strftime("%Y%m%d-%H%M%S.%f")[:-3]
-
-        day_outputdir_path = f"{conf['detected_motion_dir']}/{day_timestring}"
-        day_outputdir = Path(day_outputdir_path)
-
-        day_outputdir.mkdir(parents=True, exist_ok=True)
-        motionThisFrame, framesWithoutMotion, contours, frame, mask, mask_rect = bg_sub.apply(frame)
-
-        if conf['log_motion_status']:
-            print(f"Motion This Frame: {motionThisFrame}")
-
-        if motionThisFrame:
-            frames_with_motion += 1
-            sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
-            for contour in sorted_contours:
-                (rx, ry, rw, rh) = cv2.boundingRect(contour)
-                cv2.rectangle(frame, (rx, ry), (rx + rw, ry + rh),(255, 0, 0), 2)
-
-            if conf['write_snaps']:
-                image_filename = f"{hms_timestring}.jpg"
-                image_fqn = day_outputdir / image_filename
-                image_writer.add_image_to_queue(str(image_fqn), original)
-
-        if conf['display_mask']:
-            cv2.imshow(mask_window_name, mask)
-
-        if conf['display_video']:
-            cv2.imshow(original_window_name, frame)
-
-        if conf['display_mask'] or conf['display_video']:
-            key = cv2.waitKey(3) & 0xFF
-
-            # if the `q` key was pressed, break from the loop
-            if key == ord("q"):
+            if frame is None:
                 break
 
-            if wait_on_start == True:
-                cv2.waitKey(0)
-                wait_on_start = False
+            total_frames += 1
 
-            if motionThisFrame and args['slow_motion'] == True:
-                time.sleep(0.2)
+            # frame = imutils.resize(frame, width=800)
+            original = frame.copy()
 
-    print(f"Percentage of frames with motion: {(frames_with_motion/total_frames)*100:.2f}%")
+            # Draw the ROIs rectangles on the frame
+            if args.get('pascal_voc') and conf['display_motion_roi']:
+                for roi in motion_roi_rects:
+                    cv2.rectangle(frame, (roi[0], roi[1]), (roi[2], roi[3]), (255, 255, 0), 2)
+
+            timestamp = datetime.datetime.now()
+            day_timestring = timestamp.strftime("%Y%m%d")
+            hms_timestring = timestamp.strftime("%Y%m%d-%H%M%S.%f")[:-3]
+
+            day_outputdir_path = f"{conf['detected_motion_dir']}/{day_timestring}"
+            day_outputdir = Path(day_outputdir_path)
+
+            day_outputdir.mkdir(parents=True, exist_ok=True)
+            motionThisFrame, framesWithoutMotion, contours, frame, mask, mask_rect = bg_sub.apply(frame)
+
+            if conf['log_motion_status']:
+                if motionThisFrame:
+                    print(f"Motion This Frame: {motionThisFrame}")
+
+            if motionThisFrame:
+                frames_with_motion += 1
+                sorted_contours = sorted(contours, key=cv2.contourArea, reverse=True)
+                for contour in sorted_contours:
+                    (rx, ry, rw, rh) = cv2.boundingRect(contour)
+                    cv2.rectangle(frame, (rx, ry), (rx + rw, ry + rh),(255, 0, 0), 2)
+
+                if conf['write_snaps']:
+                    image_filename = f"{hms_timestring}.jpg"
+                    image_fqn = day_outputdir / image_filename
+                    image_writer.add_image_to_queue(str(image_fqn), original)
+
+            if conf['display_mask']:
+                cv2.imshow(mask_window_name, mask)
+
+            if conf['display_video']:
+                cv2.imshow(original_window_name, frame)
+
+            if conf['display_mask'] or conf['display_video']:
+                key = cv2.waitKey(3) & 0xFF
+
+                # if the `q` key was pressed, break from the loop
+                if key == ord("q"):
+                    break
+
+                if wait_on_start == True:
+                    cv2.waitKey(0)
+                    wait_on_start = False
+
+                if motionThisFrame and args['slow_motion'] == True:
+                    time.sleep(0.2)
+
+            print(f"Percentage of frames with motion: {(frames_with_motion/total_frames)*100:.2f}%")
+
+            if cap != None:
+                cap.release()
+
     image_writer.drain()
-
-    if args.get("video_file", None) != None:
-        cap.release()
 
     if conf['display_mask'] or conf['display_video']:
         cv2.destroyAllWindows()

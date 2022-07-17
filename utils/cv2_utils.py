@@ -1,6 +1,19 @@
 import cv2
 from rekognition_utils import RekognitionLabel, RekognitionText
+import numpy as np
 
+
+def read_image(image_path):
+    image_file = open(image_path, 'rb')
+    image_bytes = image_file.read()
+    # image_np is an image bugger
+    image_np = np.frombuffer(image_bytes, np.uint8)
+    cv2_image = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+    rgb_image = cv2.cvtColor(cv2_image, cv2.COLOR_BGR2RGB)
+
+    h, w, chans = cv2_image.shape
+
+    return image_bytes, cv2_image, rgb_image, h, w
 
 def read_image_as_byte_str(image_path, convert_bgr2rgb=True):
     # when using opencv to read an image
